@@ -277,6 +277,7 @@ public class LogLocked extends Plugin
 						.setOption("Unlock")
 						.setTarget(event.getFirstEntry().getTarget() + " Cost: 10")
 						.setType(MenuAction.RUNELITE)
+						.onClick(this::menuEntryClicked)
 				;
 			}
 
@@ -288,51 +289,41 @@ public class LogLocked extends Plugin
 	}
 
 
-
-	@Subscribe
-	public void onMenuOptionClicked(MenuOptionClicked event)
+	private void menuEntryClicked(MenuEntry menuEntry)
 	{
-		if (event.getMenuEntry().getType().equals(MenuAction.RUNELITE) && event.getMenuEntry().getOption().equals("Unlock"))
+		if (bankedSlots >= 1)
 		{
+			String target = menuEntry.getTarget();
+			int startIdx = target.indexOf('>') + 1;
+			int endIdx = target.lastIndexOf('<');
 
-			if (bankedSlots >= 1)
-			{
-				String target = event.getMenuEntry().getTarget();
-				int startIdx = target.indexOf('>') + 1;
-				int endIdx = target.lastIndexOf('<');
+			String colLogSectionName = target.substring(startIdx, endIdx);
 
-				String colLogSectionName = target.substring(startIdx, endIdx);
+			unlockedSlots.add(colLogSectionName);
 
-				unlockedSlots.add(colLogSectionName);
+			String updatedUnlocks = String.join(",", unlockedSlots);
 
-				String updatedUnlocks = String.join(",", unlockedSlots);
+			configManager.setConfiguration("LogLocked","unlocked_logs",updatedUnlocks);
 
-				configManager.setConfiguration("LogLocked","unlocked_logs",updatedUnlocks);
+			client.addChatMessage(ChatMessageType.GAMEMESSAGE
+					,""
+					,"Congratulations you have unlocked the "+ colLogSectionName +" Collection Log section."
+					,""
+					,false);
 
-				client.addChatMessage(ChatMessageType.GAMEMESSAGE
-						,""
-						,"Congratulations you have unlocked the "+ colLogSectionName +" Collection Log section."
-						,""
-						,false);
+			updateColLogHeader();
 
-				updateColLogHeader();
-
-				configManager.setConfiguration("LogLocked","stored_info",availUnlocks + "/" + slotsTillNext);
-
-			}
-			else
-			{
-				client.addChatMessage(ChatMessageType.GAMEMESSAGE
-						,""
-						,"You do not have enough banked slots to unlock this Collection Log section."
-						,""
-						,false);
-			}
-
+			configManager.setConfiguration("LogLocked","stored_info",availUnlocks + "/" + slotsTillNext);
 
 		}
-
-
+		else
+		{
+			client.addChatMessage(ChatMessageType.GAMEMESSAGE
+					,""
+					,"You do not have enough banked slots to unlock this Collection Log section."
+					,""
+					,false);
+		}
 
 	}
 
