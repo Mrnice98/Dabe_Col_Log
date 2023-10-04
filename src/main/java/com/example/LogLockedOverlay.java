@@ -40,7 +40,7 @@ public class LogLockedOverlay extends OverlayPanel {
 
         panelComponent.getChildren().add(LineComponent.builder()
                 .left("Available unlocks:")
-                .right(String.valueOf(plugin.availUnlocks))
+                .right(String.valueOf(plugin.bankedSlots))
                 .build());
 
         panelComponent.getChildren().add(LineComponent.builder()
@@ -50,7 +50,7 @@ public class LogLockedOverlay extends OverlayPanel {
 
         panelComponent.getChildren().add(LineComponent.builder()
                 .left("Unlocked sections:")
-                .right(String.valueOf(plugin.unlockedSlots.size()))
+                .right(String.valueOf(plugin.unlockedSlots.size() - 1))
                 .build());
 
 

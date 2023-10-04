@@ -55,7 +55,6 @@ public class LogLocked extends Plugin
 	private final HashMap<ColLogIcon, Integer> iconIds = new HashMap<>();
 	private final List<String> validEntries = new ArrayList<>();
 	private ColLogIcon selectedIcon = null;
-	int availUnlocks;
 	int totalLogSlots;
 	int bankedSlots = 0;
 	int slotsTillNext;
@@ -68,7 +67,7 @@ public class LogLocked extends Plugin
 
 		updateSelectedIcon();
 
-		availUnlocks = Integer.parseInt(config.storedInfo().split("/")[0]);
+		bankedSlots = Integer.parseInt(config.storedInfo().split("/")[0]);
 		slotsTillNext = Integer.parseInt(config.storedInfo().split("/")[1]);
 
 		if (client.getModIcons() == null)
@@ -91,7 +90,7 @@ public class LogLocked extends Plugin
 
 		clientThread.invoke(() -> client.runScript(ScriptID.CHAT_PROMPT_INIT));
 
-		configManager.setConfiguration("LogLocked","stored_info",availUnlocks + "/" + slotsTillNext);
+		configManager.setConfiguration("LogLocked","stored_info",bankedSlots + "/" + slotsTillNext);
 
 		overlayManager.remove(overlay);
 		log.info("LogLocked stopped");
@@ -120,9 +119,8 @@ public class LogLocked extends Plugin
 			&& COLLECTION_LOG_ITEM_REGEX.matcher(event.getMessage()).matches())
 		{
 			totalLogSlots++;
-			bankedSlots = ((totalLogSlots / 10) + config.additionalSlots()) - unlockedSlots.size();
+			bankedSlots = ((totalLogSlots / 10) + config.additionalSlots()) - (unlockedSlots.size() - 1);
 			slotsTillNext = totalLogSlots % 10 == 0 ? 10 : totalLogSlots % 10;
-			availUnlocks = bankedSlots - unlockedSlots.size();
 		}
 
 
@@ -246,11 +244,9 @@ public class LogLocked extends Plugin
 					.split("- ")[1]
 					.split("/")[0]);
 
-			bankedSlots = ((totalLogSlots / 10) + config.additionalSlots()) - unlockedSlots.size();
+			bankedSlots = ((totalLogSlots / 10) + config.additionalSlots()) - (unlockedSlots.size() - 1);
 
 			slotsTillNext = totalLogSlots % 10 == 0 ? 10 : totalLogSlots % 10;
-
-			availUnlocks = bankedSlots - unlockedSlots.size();
 
 			colLogTitleWig.setText(colLogTitleWig.getText() + " - Banked:" + bankedSlots + " - Next:" + slotsTillNext);
 			colLogTitleWig.revalidate();
@@ -313,7 +309,7 @@ public class LogLocked extends Plugin
 
 			updateColLogHeader();
 
-			configManager.setConfiguration("LogLocked","stored_info",availUnlocks + "/" + slotsTillNext);
+			configManager.setConfiguration("LogLocked","stored_info",bankedSlots + "/" + slotsTillNext);
 
 		}
 		else
