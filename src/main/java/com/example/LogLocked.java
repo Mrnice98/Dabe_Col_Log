@@ -120,7 +120,7 @@ public class LogLocked extends Plugin
 		{
 			totalLogSlots++;
 			bankedSlots = ((totalLogSlots / 10) + config.additionalSlots()) - (unlockedSlots.size() - 1);
-			slotsTillNext = totalLogSlots % 10 == 0 ? 10 : totalLogSlots % 10;
+			slotsTillNext = calcSlotsTillNext(totalLogSlots);
 		}
 
 
@@ -246,7 +246,7 @@ public class LogLocked extends Plugin
 
 			bankedSlots = ((totalLogSlots / 10) + config.additionalSlots()) - (unlockedSlots.size() - 1);
 
-			slotsTillNext = totalLogSlots % 10 == 0 ? 10 : totalLogSlots % 10;
+			slotsTillNext = calcSlotsTillNext(totalLogSlots);
 
 			colLogTitleWig.setText(colLogTitleWig.getText() + " - Banked:" + bankedSlots + " - Next:" + slotsTillNext);
 			colLogTitleWig.revalidate();
@@ -323,6 +323,19 @@ public class LogLocked extends Plugin
 
 	}
 
+	public int calcSlotsTillNext(int totalLogSlots)
+	{
+		if (totalLogSlots < 10)
+		{
+			totalLogSlots = 10 - totalLogSlots;
+		}
+		else
+		{
+			 totalLogSlots = totalLogSlots % 10 == 0 ? 10 : totalLogSlots % 10;
+		}
+
+		return totalLogSlots;
+	}
 
 	public void updateColLogHeader()
 	{
