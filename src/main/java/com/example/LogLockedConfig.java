@@ -21,8 +21,8 @@ public interface LogLockedConfig extends Config
 
 	@ConfigItem(
 			keyName = "additional_log_slots",
-			name = "Additional Log Slots",
-			description = "Add log unlock slots"
+			name = "Additional Log Sections",
+			description = "Add log unlock sections"
 	)
 	default int additionalSlots()
 	{
