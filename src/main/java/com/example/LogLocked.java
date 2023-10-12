@@ -114,13 +114,14 @@ public class LogLocked extends Plugin
 	public void onChatMessage(ChatMessage event)
 	{
 
-		if (event.getType() != ChatMessageType.GAMEMESSAGE
-			&& event.getType() != ChatMessageType.SPAM
+		if (event.getType() == ChatMessageType.GAMEMESSAGE
 			&& COLLECTION_LOG_ITEM_REGEX.matcher(event.getMessage()).matches())
 		{
 			totalLogSlots++;
 			bankedSlots = ((totalLogSlots / 10) + config.additionalSlots()) - (unlockedSlots.size() - 1);
 			slotsTillNext = calcSlotsTillNext(totalLogSlots);
+			configManager.setConfiguration("LogLocked","stored_info",bankedSlots + "/" + slotsTillNext);
+
 		}
 
 
@@ -247,6 +248,9 @@ public class LogLocked extends Plugin
 			bankedSlots = ((totalLogSlots / 10) + config.additionalSlots()) - (unlockedSlots.size() - 1);
 
 			slotsTillNext = calcSlotsTillNext(totalLogSlots);
+
+			configManager.setConfiguration("LogLocked","stored_info",bankedSlots + "/" + slotsTillNext);
+
 
 			colLogTitleWig.setText(colLogTitleWig.getText() + " - Banked:" + bankedSlots + " - Next:" + slotsTillNext);
 			colLogTitleWig.revalidate();
