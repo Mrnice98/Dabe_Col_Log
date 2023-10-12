@@ -325,15 +325,7 @@ public class LogLocked extends Plugin
 
 	public int calcSlotsTillNext(int totalLogSlots)
 	{
-		if (totalLogSlots < 10)
-		{
-			totalLogSlots = 10 - totalLogSlots;
-		}
-		else
-		{
-			 totalLogSlots = totalLogSlots % 10 == 0 ? 10 : totalLogSlots % 10;
-		}
-
+		totalLogSlots = totalLogSlots % 10 == 0 ? 10 : 10 - (totalLogSlots % 10);
 		return totalLogSlots;
 	}
 
