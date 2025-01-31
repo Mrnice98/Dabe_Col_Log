@@ -1,12 +1,12 @@
 package com.example;
 
 import com.google.inject.Provides;
-
-import javax.inject.Inject;
-
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.events.*;
+import net.runelite.api.events.BeforeRender;
+import net.runelite.api.events.ChatMessage;
+import net.runelite.api.events.MenuOpened;
+import net.runelite.api.events.ScriptCallbackEvent;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
@@ -19,10 +19,11 @@ import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.Text;
 
+import javax.inject.Inject;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -113,7 +114,6 @@ public class LogLocked extends Plugin
 	@Subscribe
 	public void onChatMessage(ChatMessage event)
 	{
-
 		if (event.getType() == ChatMessageType.GAMEMESSAGE
 			&& COLLECTION_LOG_ITEM_REGEX.matcher(event.getMessage()).matches())
 		{
@@ -157,11 +157,11 @@ public class LogLocked extends Plugin
 	@Subscribe
 	public void onBeforeRender(BeforeRender event)
 	{
+
 		updateChatbox();
 
 		Widget colLogEntryHeader = client.getWidget(WidgetInfo.COLLECTION_LOG_ENTRY_HEADER);
-		Widget colLogEntryList = client.getWidget(621,34);
-
+		Widget colLogEntryList = client.getWidget(621,35);
 
 		if (colLogEntryHeader != null)
 		{
@@ -180,11 +180,11 @@ public class LogLocked extends Plugin
 						break;
 
 					case 3:
-						colLogEntryList = client.getWidget(621,32);
+						colLogEntryList = client.getWidget(621,33);
 						break;
 
 					case 4:
-						colLogEntryList = client.getWidget(621,34);
+						colLogEntryList = client.getWidget(621,36);
 						break;
 
 					case 5:
@@ -213,33 +213,25 @@ public class LogLocked extends Plugin
 			}
 		}
 
-		if (colLogEntryHeader != null)
+		if (colLogEntryHeader != null && colLogEntryHeader.getText() != null)
 		{
 
 			Widget colLogEntry = client.getWidget(WidgetInfo.COLLECTION_LOG_ENTRY);
 			String openedLogName = colLogEntryHeader.getChild(0).getText();
-
 			colLogEntry.setHidden(!unlockedSlots.contains(openedLogName));
-
 			colLogEntry.revalidate();
-
 		}
 
 
-	}
-
-
-
-
-	@Subscribe
-	public void onWidgetLoaded(WidgetLoaded event)
-	{
-
-		Widget colLogTitleWig = client.getWidget(621,1);
-
-		if (colLogTitleWig != null)
+		Widget colLogTitleWig = client.getWidget(621,0);
+		if (colLogTitleWig != null && colLogTitleWig.getText() != null)
 		{
 			colLogTitleWig = colLogTitleWig.getChild(1);
+
+			if (colLogTitleWig.getText().contains("Banked"))
+			{
+				return;
+			}
 
 			totalLogSlots = Integer.parseInt(colLogTitleWig.getText()
 					.split("- ")[1]
@@ -251,14 +243,12 @@ public class LogLocked extends Plugin
 
 			configManager.setConfiguration("LogLocked","stored_info",bankedSlots + "/" + slotsTillNext);
 
-
-			colLogTitleWig.setText(colLogTitleWig.getText() + " - Banked:" + bankedSlots + " - Next:" + slotsTillNext);
+			colLogTitleWig.setText("             " + colLogTitleWig.getText() + " - Banked:" + bankedSlots + " - Next:" + slotsTillNext);
 			colLogTitleWig.revalidate();
 		}
 
 
 	}
-
 
 	@Subscribe
 	public void onMenuOpened(MenuOpened event)
@@ -335,7 +325,7 @@ public class LogLocked extends Plugin
 
 	public void updateColLogHeader()
 	{
-		Widget colLogTitleWig = client.getWidget(621,1);
+		Widget colLogTitleWig = client.getWidget(621,0);
 
 		if (colLogTitleWig != null)
 		{
