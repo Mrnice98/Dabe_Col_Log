@@ -7,6 +7,7 @@ import net.runelite.api.events.BeforeRender;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.MenuOpened;
 import net.runelite.api.events.ScriptCallbackEvent;
+import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
@@ -160,7 +161,7 @@ public class LogLocked extends Plugin
 
 		updateChatbox();
 
-		Widget colLogEntryHeader = client.getWidget(WidgetInfo.COLLECTION_LOG_ENTRY_HEADER);
+		Widget colLogEntryHeader = client.getWidget(ComponentID.COLLECTION_LOG_ENTRY_HEADER);
 		Widget colLogEntryList = client.getWidget(621,35);
 
 		if (colLogEntryHeader != null)
@@ -216,7 +217,7 @@ public class LogLocked extends Plugin
 		if (colLogEntryHeader != null && colLogEntryHeader.getText() != null)
 		{
 
-			Widget colLogEntry = client.getWidget(WidgetInfo.COLLECTION_LOG_ENTRY);
+			Widget colLogEntry = client.getWidget(ComponentID.COLLECTION_LOG_ENTRY);
 			String openedLogName = colLogEntryHeader.getChild(0).getText();
 			colLogEntry.setHidden(!unlockedSlots.contains(openedLogName));
 			colLogEntry.revalidate();
