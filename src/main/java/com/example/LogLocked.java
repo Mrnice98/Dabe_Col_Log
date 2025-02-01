@@ -9,7 +9,6 @@ import net.runelite.api.events.MenuOpened;
 import net.runelite.api.events.ScriptCallbackEvent;
 import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -408,7 +407,7 @@ public class LogLocked extends Plugin
 
 	private void updateChatbox()
 	{
-		Widget chatboxTypedText = client.getWidget(WidgetInfo.CHATBOX_INPUT);
+		Widget chatboxTypedText = client.getWidget(ComponentID.CHATBOX_INPUT);
 
 		if (getIconIdx() == -1)
 		{
